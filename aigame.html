@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clean the Room</title>
+  <a href="scratch.html">Return To About Page</a>
+<h2>Makena Cleans For You will help make your home squeaky clean!</h2>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+
+    .caption {
+      font-size: 18px;
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+      display: inline-block;
+      border: 2px solid black; /* Add 2px black border */
+      max-width: 50%; /* Limit the width to 50% of the screen */
+    }
+
+    .room-container {
+      position: relative;
+      width: 800px;
+      height: 400px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      gap: 2px;
+      border: 2px solid #ccc;
+    }
+
+    .quadrant {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .clean-room, .dirty-room {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: 800px 400px;
+      pointer-events: none;
+    }
+
+    .clean-room {
+      z-index: 1;
+    }
+
+    .dirty-room {
+      z-index: 2;
+      opacity: 1;
+      transition: opacity 0.3s;
+    }
+
+    .quadrant.revealed .dirty-room {
+      opacity: 0;
+    }
+
+    .reset-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .reset-btn:hover {
+      background-color: #45a049;
+    }
+
+    .final-caption {
+      font-size: 22px;
+      color: #4CAF50;
+      font-weight: bold;
+      display: none; /* Hidden initially */
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="caption">
+    Click the squares to reveal what your home will look like after Makena Cleans For You is done with it. Hit the reset button to play again.
+  </div>
+
+  <!-- Final Caption that shows after all quadrants are revealed -->
+  <div class="final-caption">
+    We will do the dirty work for you, so you don't have to!
+  </div>
+
+  <div class="room-container">
+    <!-- 25 quadrants for the room -->
+    <script>
+      let revealedCount = 0; // Track number of revealed quadrants
+
+      const createQuadrant = (index) => {
+        return `
+          <div class="quadrant" onclick="revealQuadrant(this, ${index})">
+            <div class="clean-room" style="background-image: url('clean.jpg'); background-position: ${getBackgroundPosition(index)};"></div>
+            <div class="dirty-room" style="background-image: url('dirty.jpg'); background-position: ${getBackgroundPosition(index)};"></div>
+          </div>
+        `;
+      };
+
+      const getBackgroundPosition = (index) => {
+        const row = Math.floor(index / 5);
+        const col = index % 5;
+        return `-${col * 160}px -${row * 80}px`;
+      };
+
+      for (let i = 0; i < 25; i++) {
+        document.write(createQuadrant(i));
+      }
+
+      // Function to check if all quadrants are revealed
+      function checkAllRevealed() {
+        if (revealedCount === 25) {
+          document.querySelector('.final-caption').style.display = 'block'; // Show final caption
+        }
+      }
+
+      function revealQuadrant(quadrant, index) {
+        if (!quadrant.classList.contains('revealed')) {
+          revealedCount++; // Increment the revealed count
+          quadrant.classList.add('revealed');
+          checkAllRevealed(); // Check if all quadrants are revealed
+        }
+      }
+
+      function resetRoom() {
+        const quadrants = document.querySelectorAll('.quadrant');
+        quadrants.forEach(quadrant => {
+          quadrant.classList.remove('revealed');
+        });
+        revealedCount = 0; // Reset revealed count
+        document.querySelector('.final-caption').style.display = 'none'; // Hide final caption
+      }
+    </script>
+  </div>
+
+  <button class="reset-btn" onclick="resetRoom()">Reset Room</button>
+
+</body>
+</html>
